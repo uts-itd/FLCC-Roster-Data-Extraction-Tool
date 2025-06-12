@@ -47,7 +47,11 @@ async function extractData(event) {
 
 		await context.sync();
 
+		// create Roster Data Sheet if it does not exist
 		createRosterDataSheet(sheets).activate();
+
+		// create rosterData table if it does not exist
+		const rosterDataTable = createRosterDataTable(tables);
 
 		event.completed();
 	});
@@ -62,6 +66,23 @@ function createRosterDataSheet(sheets) {
 		rosterDataSheet = sheets.add(wSheetName);
 
 	return rosterDataSheet;
+}
+
+function createRosterDataTable(tables) {
+	const tableName = 'rosterData';
+	let dataTable = tables.items.find(item => item.name === tableName);
+
+	if (dataTable === undefined) {
+		dataTable = tables.add(`'Roster Data'!A1:H1`, true);
+
+		dataTable.name = tableName;
+		dataTable.getHeaderRowRange().values = 
+			[["Name", "Allocation", "Date", "Start", "End", "Time", "Value", "Address"]];
+	} else {
+		dataTable.rows.deleteRows(dataTable.rows.items);
+	}
+
+	return dataTable;
 }
 
 Office.actions.associate("extractData", extractData);
