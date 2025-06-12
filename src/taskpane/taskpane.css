@@ -78,3 +78,13 @@
 b {
     font-weight: bold;
 }
+
+header>h1 {
+	text-align: center;
+}
+
+.author-text>a {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
