@@ -31,5 +31,40 @@ function action(event) {
   event.completed();
 }
 
+async function extractData(event) {
+	await Excel.run(async (context) => {
+		const names = context.workbook.names;
+		const tables = context.workbook.tables;
+		const sheets = context.workbook.worksheets;
+
+		context.workbook.load(
+			'worksheets/items/name' +
+			', tables/items/rows/items/values' +
+			', tables/items/name' +
+			', names/items/arrayValues/values' +
+			', names/items/name'
+		);
+
+		await context.sync();
+
+		createRosterDataSheet(sheets).activate();
+
+		event.completed();
+	});
+}
+
+function createRosterDataSheet(sheets) {
+	const wSheetName = 'Roster Data';
+
+	let rosterDataSheet = sheets.items.find(sheet => sheet.name === wSheetName);
+
+	if (rosterDataSheet === undefined)
+		rosterDataSheet = sheets.add(wSheetName);
+
+	return rosterDataSheet;
+}
+
+Office.actions.associate("extractData", extractData);
+
 // Register the function with Office.
 Office.actions.associate("action", action);
