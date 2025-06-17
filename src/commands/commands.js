@@ -1,3 +1,4 @@
+const FRDET = require('./frdet');
 /*
  * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
@@ -37,21 +38,56 @@ async function extractData(event) {
 		const tables = context.workbook.tables;
 		const sheets = context.workbook.worksheets;
 
+		// load workbook context items
 		context.workbook.load(
 			'worksheets/items/name' +
 			', tables/items/rows/items/values' +
 			', tables/items/name' +
+			', tables/items/columns/items' +
 			', names/items/arrayValues/values' +
 			', names/items/name'
 		);
 
 		await context.sync();
 
+		// define table names
+		const tableNames =
+			['Monday1', 'Tuesday1', 'Wednesday1', 'Thursday1', 'Friday1', 
+				'Monday2', 'Tuesday2', 'Wednesday2', 'Thursday2', 'Friday2',
+				'Monday3', 'Tuesday3', 'Wednesday3', 'Thursday3', 'Friday3',
+				'Monday4', 'Tuesday4', 'Wednesday4', 'Thursday4', 'Friday4',
+				'Monday5', 'Tuesday5', 'Wednesday5', 'Thursday5', 'Friday5'
+			];
+
+		// TODO: Check that it is a roster file	
+
 		// create Roster Data Sheet if it does not exist
 		createRosterDataSheet(sheets).activate();
 
 		// create rosterData table if it does not exist
 		const rosterDataTable = createRosterDataTable(tables);
+
+		
+		// define empty roster data
+		let rosterData = [];
+
+		tableNames.forEach(tableName => {
+			let rosterTable;
+			
+			try {
+				rosterTable = tables.items.find(item => item.name === tableName);
+				rosterData = rosterData.concat(extractRosterData(rosterTable));
+
+			} catch (error) {
+				console.log(`${tableName} not found`);
+			}
+		});
+
+		rosterDataTable.rows.add(null, rosterData);
+
+		// Format table
+		rosterDataTable.getRange().format.autofitColumns();
+		rosterDataTable.columns.getItem('Date').getDataBodyRange().numberFormat = 'dd/mm/yyyy';
 
 		event.completed();
 	});
@@ -60,6 +96,7 @@ async function extractData(event) {
 function createRosterDataSheet(sheets) {
 	const wSheetName = 'Roster Data';
 
+	// find sheet with wSheetName
 	let rosterDataSheet = sheets.items.find(sheet => sheet.name === wSheetName);
 
 	if (rosterDataSheet === undefined)
@@ -70,6 +107,8 @@ function createRosterDataSheet(sheets) {
 
 function createRosterDataTable(tables) {
 	const tableName = 'rosterData';
+
+	// find table with tableName
 	let dataTable = tables.items.find(item => item.name === tableName);
 
 	if (dataTable === undefined) {
@@ -83,6 +122,46 @@ function createRosterDataTable(tables) {
 	}
 
 	return dataTable;
+}
+
+function extractRosterData(table) {
+	const rows = table.rows.items;
+	const rosterData = [];
+	let address = '';
+
+	let date = '';
+
+	const STARTSEMIPHORE = 'from';
+	const ENDSEMIPHORE = 'until';
+
+	rows.forEach(row => {
+		let servicePoint = row.values[0][0];
+
+		// loop through cells by column
+		for (let colIndex = 1; colIndex <= table.columns.count - 1; colIndex++) {
+			let cellValue = row.values[0][colIndex];
+
+			if (cellValue != '') {
+				let name = FRDET.extractName(cellValue);
+
+				// Get start and end times
+				let timeArray = FRDET.getTime(FRDET.getTimeString(colIndex), cellValue);
+				let startTime = timeArray[0];
+				let endTime = timeArray[1];
+
+				// Calculate the time (hours)
+				let time = endTime > startTime ?
+					endTime - startTime :
+					endTime + 12 - startTime;
+
+				rosterData.push([
+					name, servicePoint, date, startTime, endTime, time, cellValue, address
+				]);
+			}
+		}
+	});
+
+	return rosterData;
 }
 
 Office.actions.associate("extractData", extractData);
