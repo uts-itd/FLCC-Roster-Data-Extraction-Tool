@@ -50,6 +50,18 @@ async function extractData(event) {
 
 		await context.sync();
 
+		// Get dates cells from tables
+		const dateCells = [];
+
+		tables.items.forEach(table => {
+			const dateCell = table.getHeaderRowRange().getCell(0, 0);
+			dateCell.load('values');
+
+			dateCells.push({ tableName: table.name, cell: dateCell });
+		});
+
+		await context.sync();
+
 		// define table names
 		const tableNames =
 			['Monday1', 'Tuesday1', 'Wednesday1', 'Thursday1', 'Friday1', 
@@ -67,17 +79,21 @@ async function extractData(event) {
 		// create rosterData table if it does not exist
 		const rosterDataTable = createRosterDataTable(tables);
 
-		
 		// define empty roster data
 		let rosterData = [];
 
 		tableNames.forEach(tableName => {
-			let rosterTable;
-			
 			try {
-				rosterTable = tables.items.find(item => item.name === tableName);
-				rosterData = rosterData.concat(extractRosterData(rosterTable));
+				let rosterTable = tables.items.find(item => item.name === tableName);
+				let extractedRosterData = extractRosterData(rosterTable);
 
+				// Get date from dateCells objects
+				let date = dateCells.find(cell => cell.tableName === tableName).cell.values[0][0];
+
+				// Add date to all rows
+				extractedRosterData.forEach(row => row[2] = date);
+
+				rosterData = rosterData.concat(extractedRosterData);
 			} catch (error) {
 				console.log(`${tableName} not found`);
 			}
