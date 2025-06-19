@@ -144,6 +144,17 @@ function getTime(timeString, cellValue) {
 	return [+startTime, +endTime];	
 }
 
+/*
+ * Returns the lunch time from the string otherwise, it return null.
+ */
+function extractLunchTime(cellValue) {
+	const pattern = /\blunch\s+(\d{1,2}[.:]\d{2})\b/i;
+
+	let matches = cellValue.match(pattern);
+
+	return matches ? matches[1] : null;
+}
+
 module.exports = {
 	extractName,
 	extractTime,
@@ -153,6 +164,7 @@ module.exports = {
 	extractTimeRanges,
 	excelDateToJSDate,
 	cleanTimeStringOverride,
-	getTime
+	getTime,
+	extractLunchTime
 };
 
