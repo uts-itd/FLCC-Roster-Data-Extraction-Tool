@@ -154,3 +154,14 @@ describe('excelDateToJSDate() convert excel date serial to JS Date format', () =
 		expect(convertedDate).toEqual(expectedDate);
 	});
 });
+
+describe('extractLunchTime() gets the lunch time from the given string', () => {
+	const cellValue = 'John Doe (lunch 12.30)';
+	const expectedValue = '12.30';
+
+	const result = FRDET.extractLunchTime(cellValue);
+
+	test('result should be "12.30"', () => {
+		expect(result).toBe(expectedValue);
+	});
+});
