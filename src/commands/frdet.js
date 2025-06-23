@@ -73,24 +73,6 @@ function getTimeString(columnIndex) {
 	return timeStrings.get(columnIndex);
 }
 
-// not used
-function extractTimeRanges(row) {
-	const timePattern = /[0-9]{1,2}-[0-9]{1,2}/;
-	const timeMap = new Map();
-	let keyIndex = 2;
-
-	row.forEach(item => {
-		if(item.match(timePattern)) {
-			const timeStringArr = item.split('-').map(time => time + '.00');
-			const timeString = timeStringArr[0] + '-' + timeStringArr[1];
-
-			timeMap.set(keyIndex++, timeString);
-		}
-	});
-
-	return timeMap;
-}
-
 /*
  * Returns a date object converted from the Excel date serial number
  */
@@ -198,14 +180,12 @@ function extractRosterData(table) {
 	return rosterData;
 }
 
-
 module.exports = {
 	extractName,
 	extractTime,
 	isTimeRange,
 	convertTime,
 	getTimeString,
-	extractTimeRanges,
 	excelDateToJSDate,
 	cleanTimeStringOverride,
 	getTime,
