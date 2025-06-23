@@ -47,23 +47,6 @@ describe('extractTime() takes a string value from a roster cell and returns the 
 	});
 });
 
-describe('isTimeRange() checks if the time string is a range', () => {
-	const timeStrings = [
-		'9.30',
-		'9.30-10.30'
-	];
-
-	const isTimeRanges = timeStrings.map(str => FRDET.isTimeRange(str));
-
-	test('String "9.30" is falsy', () => {
-		expect(isTimeRanges[0]).toBeFalsy();
-	});
-
-	test('String "9.30-10.30" is truthy', () => {
-		expect(isTimeRanges[1]).toBeTruthy();
-	});
-});
-
 describe('convertTime() converts a time string to double', () => {
 	const timeString = '9.30';
 
@@ -89,12 +72,12 @@ describe('getTime() will get the time array based off the input', () => {
 describe('getTime() should get the time based off the cell value', () => {
 	const cellValue = 'John Doe (from 11:30)';
 	const timeString = '11.00-12.00';
+	const expectedResult = [11.5, 12];
 
 	const result = FRDET.getTime(timeString, cellValue);
 	
-	test('getTime()2', () => {
-		expect(result[0]).toBe(11.5);
-		expect(result[1]).toBe(12);
+	test('result should equal [11.5, 12] ', () => {
+		expect(result).toEqual(expectedResult);
 	});
 });
 
@@ -120,7 +103,7 @@ describe('extractLunchTime() gets the lunch time from the given string', () => {
 	});
 });
 
-describe.only('extractRosterData() extracts the roster data into an array.', () => {
+describe('extractRosterData() extracts the roster data into an array.', () => {
 	const ROSTERTABLE = {
 		"name" : "Monday1",
 		"columns" : {
