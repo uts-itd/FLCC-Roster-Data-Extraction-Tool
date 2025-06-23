@@ -85,7 +85,7 @@ async function extractData(event) {
 		tableNames.forEach(tableName => {
 			try {
 				let rosterTable = tables.items.find(item => item.name === tableName);
-				let extractedRosterData = extractRosterData(rosterTable);
+				let extractedRosterData = FRDET.extractRosterData(rosterTable);
 
 				// Get date from dateCells objects
 				let date = dateCells.find(cell => cell.tableName === tableName).cell.values[0][0];
@@ -138,46 +138,6 @@ function createRosterDataTable(tables) {
 	}
 
 	return dataTable;
-}
-
-function extractRosterData(table) {
-	const rows = table.rows.items;
-	const rosterData = [];
-	let address = '';
-
-	let date = '';
-
-	const STARTSEMIPHORE = 'from';
-	const ENDSEMIPHORE = 'until';
-
-	rows.forEach(row => {
-		let servicePoint = row.values[0][0];
-
-		// loop through cells by column
-		for (let colIndex = 1; colIndex <= table.columns.count - 1; colIndex++) {
-			let cellValue = row.values[0][colIndex];
-
-			if (cellValue != '') {
-				let name = FRDET.extractName(cellValue);
-
-				// Get start and end times
-				let timeArray = FRDET.getTime(FRDET.getTimeString(colIndex), cellValue);
-				let startTime = timeArray[0];
-				let endTime = timeArray[1];
-
-				// Calculate the time (hours)
-				let time = endTime > startTime ?
-					endTime - startTime :
-					endTime + 12 - startTime;
-
-				rosterData.push([
-					name, servicePoint, date, startTime, endTime, time, cellValue, address
-				]);
-			}
-		}
-	});
-
-	return rosterData;
 }
 
 Office.actions.associate("extractData", extractData);

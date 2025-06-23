@@ -155,6 +155,50 @@ function extractLunchTime(cellValue) {
 	return matches ? matches[1] : null;
 }
 
+/*
+ * Returns extracter roster table
+ */
+function extractRosterData(table) {
+	const rows = table.rows.items;
+	const rosterData = [];
+	let address = '';
+
+	let date = '';
+
+	const STARTSEMIPHORE = 'from';
+	const ENDSEMIPHORE = 'until';
+
+	rows.forEach(row => {
+		let servicePoint = row.values[0][0];
+
+		// loop through cells by column
+		for (let colIndex = 1; colIndex <= table.columns.count - 1; colIndex++) {
+			let cellValue = row.values[0][colIndex];
+
+			if (cellValue !== '') {
+				let name = extractName(cellValue);
+
+				// Get start and end times
+				let timeArray = getTime(getTimeString(colIndex), cellValue);
+				let startTime = timeArray[0];
+				let endTime = timeArray[1];
+
+				// Calculate the time (hours)
+				let time = endTime > startTime ?
+					endTime - startTime :
+					endTime + 12 - startTime;
+
+				rosterData.push([
+					name, servicePoint, date, startTime, endTime, time, cellValue, address
+				]);
+			}
+		}
+	});
+
+	return rosterData;
+}
+
+
 module.exports = {
 	extractName,
 	extractTime,
@@ -165,6 +209,7 @@ module.exports = {
 	excelDateToJSDate,
 	cleanTimeStringOverride,
 	getTime,
-	extractLunchTime
+	extractLunchTime,
+	extractRosterData
 };
 
