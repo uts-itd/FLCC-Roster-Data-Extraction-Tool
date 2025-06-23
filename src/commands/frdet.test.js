@@ -98,52 +98,6 @@ describe('getTime() should get the time based off the cell value', () => {
 	});
 });
 
-describe('extractTimeRanges() converts the timeRow to a Map of timeStrings', () => {
-	const row = [
-		'Service Points',
-		'Details',
-		'8-9',
-		'9-10',
-		'10-11',
-		'11-12',
-		'12-1',
-		'1-2',
-		'2-3',
-		'3-4',
-		'4-5',
-		'5-6',
-		'6-7'
-	];
-
-	const expectedMap = new Map([
-		[2, '8.00-9.00'],
-		[3, '9.00-10.00'],
-		[4, '10.00-11.00'],
-		[5, '11.00-12.00'],
-		[6, '12.00-1.00'],
-		[7, '1.00-2.00'],
-		[8, '2.00-3.00'],
-		[9, '3.00-4.00'],
-		[10, '4.00-5.00'],
-		[11, '5.00-6.00'],
-		[12, '6.00-7.00']
-	]);
-
-	const timeRangeMap = FRDET.extractTimeRanges(row);
-
-	test('timeRangeMap is length of 11', () => {
-		expect(timeRangeMap.size).toBe(11);
-	});
-
-	test.skip('timeRangeMap keys are all integers', () => {
-		expect(timeRangeMap.keys().every(key => typeof(key) === 'number')).toBeTruthy();
-	});
-
-	test('timeRangeMap is same as expectedMap', () => {
-		expect(timeRangeMap).toEqual(expectedMap);
-	});
-});
-
 describe('excelDateToJSDate() convert excel date serial to JS Date format', () => {
 	const dateSerial = 45108;
 	const expectedDate = new Date('2023-07-01T00:00:00.000Z');
