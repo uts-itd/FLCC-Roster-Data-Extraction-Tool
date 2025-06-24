@@ -10,7 +10,7 @@ describe('extractName() takes a string value from the roster cell and returns th
 	});
 });
 
-describe('extractTime() takes a string value from a roster cell and returns the time string found in parenthesis', () => {
+describe('extractTimeOverride() takes a string value from a roster cell and returns the time string found in parenthesis', () => {
 	const nameStrings = [
 		'John Doe (until 9.30)',
 		'John Doe (from 9.15 - until 9.45)',
@@ -20,7 +20,7 @@ describe('extractTime() takes a string value from a roster cell and returns the 
 		'John Doe (until 11.20)'
 	];
 
-	const extractedTimes = nameStrings.map(str => FRDET.extractTime(str));
+	const extractedTimes = nameStrings.map(str => FRDET.extractTimeOverride(str));
 
 	test('Time extracted from "John Doe (until 9.30)" is "until 9.30"', () => {
 		expect(extractedTimes[0]).toBe('until 9.30');
@@ -219,5 +219,22 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 
 	test('Roster data should be extracted to the roster table', () => {
 		expect(result).toEqual(expectedResult);
+	});
+});
+
+describe('getTimeRange() will get the time range associated with the column of the cell.', () => {
+	const HEADER = {
+		"values" : [
+			['Mon 5th May', '9-10am', '10-11am', '11-12pm', '12-1pm', '1-2pm', '2-3pm', '3-4pm', '4-5pm', '5-6pm', '6-7pm']
+		],
+	};
+
+	const columnIndex = 3;
+	const expectedResult = '11-12';
+
+	const result = FRDET.getTimeRange(columnIndex, HEADER);
+
+	test('timeRange returned should be "11-12"', () => {
+		expect(result).toBe(expectedResult);
 	});
 });
