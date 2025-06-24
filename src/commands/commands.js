@@ -50,14 +50,13 @@ async function extractData(event) {
 
 		await context.sync();
 
-		// Get dates cells from tables
-		const dateCells = [];
+		// Get header row ranges
+		const headerRowRanges = [];
 
 		tables.items.forEach(table => {
-			const dateCell = table.getHeaderRowRange().getCell(0, 0);
-			dateCell.load('values');
+			const headerRowRange = table.getHeaderRowRange().load('values');
 
-			dateCells.push({ tableName: table.name, cell: dateCell });
+			headerRowRanges.push( { tableName: table.name, headerRowRange: headerRowRange } );
 		});
 
 		await context.sync();
@@ -85,13 +84,8 @@ async function extractData(event) {
 		tableNames.forEach(tableName => {
 			try {
 				let rosterTable = tables.items.find(item => item.name === tableName);
-				let extractedRosterData = FRDET.extractRosterData(rosterTable);
-
-				// Get date from dateCells objects
-				let date = dateCells.find(cell => cell.tableName === tableName).cell.values[0][0];
-
-				// Add date to all rows
-				extractedRosterData.forEach(row => row[2] = date);
+				let header = headerRowRanges.find(header => header.tableName === tableName);
+				let extractedRosterData = FRDET.extractRosterData(rosterTable, header.headerRowRange);
 
 				rosterData = rosterData.concat(extractedRosterData);
 			} catch (error) {

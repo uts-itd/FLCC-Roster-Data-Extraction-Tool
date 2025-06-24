@@ -128,12 +128,12 @@ function extractLunchTime(cellValue) {
 /*
  * Returns extracter roster table
  */
-function extractRosterData(table) {
+function extractRosterData(table, headerRowRange) {
 	const rows = table.rows.items;
 	const rosterData = [];
 	let address = '';
 
-	let date = '';
+	let date = headerRowRange.values[0][0];
 
 	rows.forEach(row => {
 		let servicePoint = row.values[0][0];
