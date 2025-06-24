@@ -15,8 +15,8 @@ function extractName(cellValue) {
  * Returns the time override string from a given cell value.
  * e.g. John Smith (9.30am-10am) => 9.30am-10am
  */
-function extractTime(cellValue) {
-	const pattern = /(from?|from ?)?(2[0-3]|[01]?[0-9])[\.\:]([0-5][0-9])([ -]?|( - )?|( -)?|(- )?)((until)?|(until )?)?(2[0-3]|[01]?[0-9])[\.\:]([0-5][0-9])|((from?|from ?)|((until)?|(until )?))(2[0-3]|[01]?[0-9])[\.\:]([0-5][0-9])/g;
+function extractTimeOverride(cellValue) {
+	const pattern = /((from|start|until|finish|lunch)\s*)?\d{1,2}.\d{1,2}(\s?-\s?)?((until|finish)?\s*\d{1,2}.\d{1,2})?/g;
 
 	let matches = cellValue.match(pattern);
 	let timeString;
@@ -89,7 +89,7 @@ function getTime(timeString, cellValue) {
 	let endTime = timeStringArr[1].trim();
 
 	// Checks if there are any time override values in the cells (e.g. John Doe (from 9.30)
-	let timeStringOverride = extractTime(cellValue);
+	let timeStringOverride = extractTimeOverride(cellValue);
 	
 	
 	if (timeStringOverride !== null) {
@@ -166,7 +166,7 @@ function extractRosterData(table, headerRowRange) {
 
 module.exports = {
 	extractName,
-	extractTime,
+	extractTimeOverride,
 	convertTime,
 	getTimeString,
 	excelDateToJSDate,
