@@ -122,11 +122,11 @@ function createRosterDataTable(tables) {
 	let dataTable = tables.items.find(item => item.name === tableName);
 
 	if (dataTable === undefined) {
-		dataTable = tables.add(`'Roster Data'!A1:H1`, true);
+		dataTable = tables.add(`'Roster Data'!A1:G1`, true);
 
 		dataTable.name = tableName;
 		dataTable.getHeaderRowRange().values = 
-			[["Name", "Allocation", "Date", "Start", "End", "Time", "Value", "Address"]];
+			[["Name", "Allocation", "Date", "Start", "End", "Time", "Value"]];
 	} else {
 		dataTable.rows.deleteRows(dataTable.rows.items);
 	}

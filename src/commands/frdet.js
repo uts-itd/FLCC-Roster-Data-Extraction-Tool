@@ -131,7 +131,6 @@ function extractLunchTime(cellValue) {
 function extractRosterData(table, headerRowRange) {
 	const rows = table.rows.items;
 	const rosterData = [];
-	let address = '';
 
 	let date = headerRowRange.values[0][0];
 
@@ -156,7 +155,7 @@ function extractRosterData(table, headerRowRange) {
 					endTime + 12 - startTime;
 
 				rosterData.push([
-					name, servicePoint, date, startTime, endTime, time, cellValue, address
+					name, servicePoint, date, startTime, endTime, time, cellValue
 				]);
 			}
 		}
