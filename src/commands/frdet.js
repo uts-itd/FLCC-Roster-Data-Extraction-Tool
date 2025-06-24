@@ -27,21 +27,6 @@ function extractTime(cellValue) {
 }
 
 /*
- * Returns true if the timeString is a range (i.e. 9.30-10)
- * Returns false if the timeString is not a range (i.e. 9.30)
- */
-function isTimeRange(timeString) {
-	let pattern = /(from?|from ?)?(2[0-3]|[01]?[0-9])[\.\:]([0-5][0-9])([ -]?|( - )?|( -)?|(- )?)((until)?|(until )?)?(2[0-3]|[01]?[0-9])[\.\:]([0-5][0-9])/g;
-
-	let matches = timeString.match(pattern);
-
-	if (matches === null)
-		return false;
-
-	return true;
-}
-
-/*
  * Returns a string that can be used for calculating the number of hours. e.g. 9.30 => 9.5
  */
 function convertTime(timeString) {
@@ -84,6 +69,9 @@ function excelDateToJSDate(serial) {
 	return date_info;
 }
 
+/*
+ * 
+ */
 function cleanTimeStringOverride(timeStringOverride) {
 	let cleanedString = timeStringOverride.replace('until', 'til');
 	cleanedString = cleanedString.replace('till', 'til');
@@ -147,9 +135,6 @@ function extractRosterData(table) {
 
 	let date = '';
 
-	const STARTSEMIPHORE = 'from';
-	const ENDSEMIPHORE = 'until';
-
 	rows.forEach(row => {
 		let servicePoint = row.values[0][0];
 
@@ -183,7 +168,6 @@ function extractRosterData(table) {
 module.exports = {
 	extractName,
 	extractTime,
-	isTimeRange,
 	convertTime,
 	getTimeString,
 	excelDateToJSDate,
