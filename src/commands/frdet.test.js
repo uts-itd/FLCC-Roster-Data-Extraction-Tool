@@ -170,46 +170,52 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 		},
 	};
 
+	const HEADER = {
+		"values" : [
+			['Mon 5th May', '9-10am', '10-11am', '11-12pm', '12-1pm', '1-2pm', '2-3pm', '3-4pm', '4-5pm', '5-6pm', '6-7pm']
+		],
+	};
+
 	const expectedResult = [
-		['Shreya', 'Inbound/SF', '', 9, 10, 1, 'Shreya', ''],
-		['Angeline', 'Inbound/SF', '', 10, 11, 1, 'Angeline', ''],
-		['Angeline', 'Inbound/SF', '', 11, 12, 1, 'Angeline', ''],
-		['Angeline', 'Inbound/SF', '', 12, 1, 1, 'Angeline', ''],
-		['Grace', 'Inbound/SF', '', 1, 2, 1, 'Grace', ''],
-		['Joyce', 'Inbound/SF', '', 3, 4, 1, 'Joyce', ''],
-		['Joyce', 'Inbound/SF', '', 4, 5, 1, 'Joyce (finish 4.30)', ''],
-		['Aditya', 'Inbound/SF', '', 5, 6, 1, 'Aditya', ''],
-		['Alex', 'Inbound/SF', '', 6, 7, 1, 'Alex', ''],
-		['Akansha', 'Inbound/SF', '', 9, 10, 1, 'Akansha', ''],
-		['Akansha', 'Inbound/SF', '', 10, 11, 1, 'Akansha', ''],
-		['Akansha', 'Inbound/SF', '', 11, 12, 1, 'Akansha', ''],
-		['Shreya', 'Inbound/SF', '', 12, 1, 1, 'Shreya', ''],
-		['Joyce', 'Inbound/SF', '', 2, 3, 1, 'Joyce', ''],
-		['Grace', 'Inbound/SF', '', 3, 4, 1, 'Grace', ''],
-		['Aditya', 'Inbound/SF', '', 4, 5, 1, 'Aditya', ''],
-		['Shreya', 'Inbound/SF', '', 11, 12, 1, 'Shreya', ''],
-		['Grace', 'Inbound/SF', '', 12, 1, 1, 'Grace (start 12.30)', ''],
-		['Alex', 'Inbound/SF', '', 4, 5, 1, 'Alex', ''],
-		['Angeline', 'Salesforce only', '', 9, 10, 1, 'Angeline', ''],
-		['Shreya', 'Salesforce only', '', 10, 11, 1, 'Shreya', ''],
-		['Akansha', 'Salesforce only', '', 12, 1, 1, 'Akansha', ''],
-		['Joyce', 'Salesforce only', '', 1, 2, 1, 'Joyce', ''],
-		['Grace', 'Salesforce only', '', 2, 3, 1, 'Grace', ''],
-		['Grace', 'Salesforce only', '', 4, 5, 1, 'Grace (finish 4.30)', ''],
-		['Alex', 'Salesforce only', '', 5, 6, 1, 'Alex', ''],
-		['Aditya', 'Salesforce only', '', 6, 7, 1, 'Aditya', ''],
-		['Joyce', 'Salesforce only', '', 12, 1, 1, 'Joyce (start 12.30)', ''],
-		['Yoon', 'Outbound / Inbound', '', 12, 1, 1, 'Yoon (start 12.30)', ''],
-		['Yoon', 'Outbound / Inbound', '', 1, 2, 1, 'Yoon', ''],
-		['Yoon', 'Outbound / Inbound', '', 2, 3, 1, 'Yoon', ''],
-		['Yoon', 'Outbound / Inbound', '', 3, 4, 1, 'Yoon', ''],
-		['Yoon', 'Outbound / Inbound', '', 4, 5, 1, 'Yoon (finish 4.30)', ''],
-		['Sienna', 'Outbound / Inbound', '', 5, 6, 1, 'Sienna', ''],
-		['Sienna', 'Outbound / Inbound', '', 6, 7, 1, 'Sienna', ''],
-		['Sienna', 'Outbound / Inbound', '', 4, 5, 1, 'Sienna', '']
+		['Shreya', 'Inbound/SF', 'Mon 5th May', 9, 10, 1, 'Shreya', ''],
+		['Angeline', 'Inbound/SF', 'Mon 5th May', 10, 11, 1, 'Angeline', ''],
+		['Angeline', 'Inbound/SF', 'Mon 5th May', 11, 12, 1, 'Angeline', ''],
+		['Angeline', 'Inbound/SF', 'Mon 5th May', 12, 1, 1, 'Angeline', ''],
+		['Grace', 'Inbound/SF', 'Mon 5th May', 1, 2, 1, 'Grace', ''],
+		['Joyce', 'Inbound/SF', 'Mon 5th May', 3, 4, 1, 'Joyce', ''],
+		['Joyce', 'Inbound/SF', 'Mon 5th May', 4, 5, 1, 'Joyce (finish 4.30)', ''],
+		['Aditya', 'Inbound/SF', 'Mon 5th May', 5, 6, 1, 'Aditya', ''],
+		['Alex', 'Inbound/SF', 'Mon 5th May', 6, 7, 1, 'Alex', ''],
+		['Akansha', 'Inbound/SF', 'Mon 5th May', 9, 10, 1, 'Akansha', ''],
+		['Akansha', 'Inbound/SF', 'Mon 5th May', 10, 11, 1, 'Akansha', ''],
+		['Akansha', 'Inbound/SF', 'Mon 5th May', 11, 12, 1, 'Akansha', ''],
+		['Shreya', 'Inbound/SF', 'Mon 5th May', 12, 1, 1, 'Shreya', ''],
+		['Joyce', 'Inbound/SF', 'Mon 5th May', 2, 3, 1, 'Joyce', ''],
+		['Grace', 'Inbound/SF', 'Mon 5th May', 3, 4, 1, 'Grace', ''],
+		['Aditya', 'Inbound/SF', 'Mon 5th May', 4, 5, 1, 'Aditya', ''],
+		['Shreya', 'Inbound/SF', 'Mon 5th May', 11, 12, 1, 'Shreya', ''],
+		['Grace', 'Inbound/SF', 'Mon 5th May', 12, 1, 1, 'Grace (start 12.30)', ''],
+		['Alex', 'Inbound/SF', 'Mon 5th May', 4, 5, 1, 'Alex', ''],
+		['Angeline', 'Salesforce only', 'Mon 5th May', 9, 10, 1, 'Angeline', ''],
+		['Shreya', 'Salesforce only', 'Mon 5th May', 10, 11, 1, 'Shreya', ''],
+		['Akansha', 'Salesforce only', 'Mon 5th May', 12, 1, 1, 'Akansha', ''],
+		['Joyce', 'Salesforce only', 'Mon 5th May', 1, 2, 1, 'Joyce', ''],
+		['Grace', 'Salesforce only', 'Mon 5th May', 2, 3, 1, 'Grace', ''],
+		['Grace', 'Salesforce only', 'Mon 5th May', 4, 5, 1, 'Grace (finish 4.30)', ''],
+		['Alex', 'Salesforce only', 'Mon 5th May', 5, 6, 1, 'Alex', ''],
+		['Aditya', 'Salesforce only', 'Mon 5th May', 6, 7, 1, 'Aditya', ''],
+		['Joyce', 'Salesforce only', 'Mon 5th May', 12, 1, 1, 'Joyce (start 12.30)', ''],
+		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 12, 1, 1, 'Yoon (start 12.30)', ''],
+		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 1, 2, 1, 'Yoon', ''],
+		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 2, 3, 1, 'Yoon', ''],
+		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 3, 4, 1, 'Yoon', ''],
+		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 4, 5, 1, 'Yoon (finish 4.30)', ''],
+		['Sienna', 'Outbound / Inbound', 'Mon 5th May', 5, 6, 1, 'Sienna', ''],
+		['Sienna', 'Outbound / Inbound', 'Mon 5th May', 6, 7, 1, 'Sienna', ''],
+		['Sienna', 'Outbound / Inbound', 'Mon 5th May', 4, 5, 1, 'Sienna', '']
 	];
 
-	const result = FRDET.extractRosterData(ROSTERTABLE);
+	const result = FRDET.extractRosterData(ROSTERTABLE, HEADER);
 
 	test('Roster data should be extracted to the roster table', () => {
 		expect(result).toEqual(expectedResult);
