@@ -122,7 +122,19 @@ function extractLunchTime(cellValue) {
 
 	let matches = cellValue.match(pattern);
 
-	return matches ? matches[1] : null;
+	return matches ? matches[0] : null;
+}
+
+/*
+ * Gets the corresponding time range from the header
+ */ 
+function getTimeRange(columnIndex, headerRowRange) {
+	let timeRangeString = headerRowRange.values[0][columnIndex];
+	const pattern = /\d{1,2}-\d{1,2}/;
+
+	const matches = timeRangeString.match(pattern);
+
+	return matches[0];
 }
 
 /*
@@ -144,19 +156,77 @@ function extractRosterData(table, headerRowRange) {
 			if (cellValue !== '') {
 				let name = extractName(cellValue);
 
-				// Get start and end times
-				let timeArray = getTime(getTimeString(colIndex), cellValue);
-				let startTime = timeArray[0];
-				let endTime = timeArray[1];
+				let timeRange = getTimeRange(colIndex, headerRowRange).split('-'); // e.g. 11-12
+				let timeRangeOverride = extractTimeOverride(cellValue); // e.g. from 11.30 or until 4.30
+				let lunchTimeString = extractLunchTime(cellValue); // e.g. lunch 12.30
+				
+				let timePattern = /\d{1,2}.\d{1,2}/g;
 
-				// Calculate the time (hours)
-				let time = endTime > startTime ?
-					endTime - startTime :
-					endTime + 12 - startTime;
+				// If there's a lunch time
+				if (lunchTimeString) {
+					// Get lunch start and end times
+					let lunchStart = convertTime(lunchTimeString.match(timePattern)[0]);
+					let lunchEnd = lunchStart + .5 > 12 ?
+						lunchStart + .5 - 12 :
+						lunchStart + .5;
 
-				rosterData.push([
-					name, servicePoint, date, startTime, endTime, time, cellValue
-				]);
+					// Calculate how long lunch time is
+					let lunchTime = lunchEnd > lunchStart ?
+						lunchEnd - lunchStart :
+						lunchEnd + 12 - lunchStart;
+
+					// Get service point start and end times
+					let startTime = timeRange[0] < lunchStart ?
+						Number(timeRange[0]) :
+						lunchEnd;
+					let endTime = timeRange[1] == lunchEnd ?
+						lunchStart :
+						Number(timeRange[1]);
+
+					// Caculate how long service point time is
+					let time = endTime > startTime ?
+						endTime - startTime:
+						entTime + 12 - startTime;
+
+					// If lunch time starts BEFORE the service point start
+					if (lunchStart < startTime) {
+						rosterData.push([
+							name, 'Lunch', date, lunchStart, lunchEnd, lunchTime, cellValue
+						]);
+
+						rosterData.push([
+							name, servicePoint, date, startTime, endTime, time, cellValue
+						]);
+					} else { // Otherwise, lunch time comes after the service point time
+						rosterData.push([
+							name, servicePoint, date, startTime, endTime, time, cellValue
+						]);
+
+						rosterData.push([
+							name, 'Lunch', date, lunchStart, lunchEnd, lunchTime, cellValue
+						]);
+					}
+				} else {
+					let startTime = Number(timeRange[0]);
+					let endTime = Number(timeRange[1]);
+					
+					if (timeRangeOverride) {
+						if (timeRangeOverride.startsWith('start') || timeRangeOverride.startsWith('from'))
+							startTime = convertTime(timeRangeOverride.match(timePattern)[0]);
+
+						if (timeRangeOverride.startsWith('finish') || timeRangeOverride.startsWith('until'))
+							endTime = convertTime(timeRangeOverride.match(timePattern)[0]);
+					}
+
+					// Calculate the time (hours)
+					let time = endTime > startTime ?
+						endTime - startTime :
+						endTime + 12 - startTime;
+
+					rosterData.push([
+						name, servicePoint, date, startTime, endTime, time, cellValue
+					]);
+				}
 			}
 		}
 	});
@@ -173,6 +243,7 @@ module.exports = {
 	cleanTimeStringOverride,
 	getTime,
 	extractLunchTime,
+	getTimeRange,
 	extractRosterData
 };
 
