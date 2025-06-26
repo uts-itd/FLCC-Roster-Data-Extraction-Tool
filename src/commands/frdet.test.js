@@ -92,18 +92,44 @@ describe('excelDateToJSDate() convert excel date serial to JS Date format', () =
 	});
 });
 
-describe('extractLunchTime() gets the lunch time from the given string', () => {
-	const cellValue = 'John Doe (lunch 12.30)';
-	const expectedValue = 'lunch 12.30';
+describe.only('extractLunchTime() gets the lunch time from the given string', () => {
+	let cellValue = 'John Doe (lunch 12.30)';
+	let expectedValue = 'lunch 12.30';
 
-	const result = FRDET.extractLunchTime(cellValue);
+	let result = FRDET.extractLunchTime(cellValue);
 
 	test('result should be "lunch 12.30"', () => {
 		expect(result).toBe(expectedValue);
 	});
+
+	cellValue = 'John Doe (Do something lunch 12.00)';
+	expectedValue = 'lunch 12.00';
+
+	result = FRDET.extractLunchTime(cellValue);
+
+	test('result should be "lunch 12.00"', () => {
+		expect(result).toBe(expectedValue);
+	});
 });
 
-describe('extractRosterData() extracts the roster data into an array.', () => {
+describe('getTimeRange() will get the time range associated with the column of the cell.', () => {
+	const HEADER = {
+		"values" : [
+			['Mon 5th May', '9-10am', '10-11am', '11-12pm', '12-1pm', '1-2pm', '2-3pm', '3-4pm', '4-5pm', '5-6pm', '6-7pm']
+		],
+	};
+
+	const columnIndex = 3;
+	const expectedResult = '11-12';
+
+	const result = FRDET.getTimeRange(columnIndex, HEADER);
+
+	test('timeRange returned should be "11-12"', () => {
+		expect(result).toBe(expectedResult);
+	});
+});
+
+describe.only('extractRosterData() extracts the roster data into an array.', () => {
 	const ROSTERTABLE = {
 		"name" : "Monday1",
 		"columns" : {
@@ -113,7 +139,7 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 			"items" : [ //row
 				{
 					"values" : [
-						['Inbound/SF', 'Shreya', 'Angeline', 'Angeline', 'Angeline', 'Grace', '', 'Joyce', 'Joyce (finish 4.30)', 'Aditya', 'Alex']
+						['Inbound/SF', 'Shreya', 'Angeline', 'Angeline', 'Angeline (lunch 12.30)', 'Grace', '', 'Joyce', 'Joyce (finish 4.30)', 'Aditya', 'Alex']
 					],
 				},
 				{
@@ -180,10 +206,11 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 		['Shreya', 'Inbound/SF', 'Mon 5th May', 9, 10, 1, 'Shreya'],
 		['Angeline', 'Inbound/SF', 'Mon 5th May', 10, 11, 1, 'Angeline'],
 		['Angeline', 'Inbound/SF', 'Mon 5th May', 11, 12, 1, 'Angeline'],
-		['Angeline', 'Inbound/SF', 'Mon 5th May', 12, 1, 1, 'Angeline'],
+		['Angeline', 'Inbound/SF', 'Mon 5th May', 12, 12.5, 0.5, 'Angeline (lunch 12.30)'],
+		['Angeline', 'Lunch', 'Mon 5th May', 12.5, 1, 0.5, 'Angeline (lunch 12.30)'],
 		['Grace', 'Inbound/SF', 'Mon 5th May', 1, 2, 1, 'Grace'],
 		['Joyce', 'Inbound/SF', 'Mon 5th May', 3, 4, 1, 'Joyce'],
-		['Joyce', 'Inbound/SF', 'Mon 5th May', 4, 5, 1, 'Joyce (finish 4.30)'],
+		['Joyce', 'Inbound/SF', 'Mon 5th May', 4, 4.5, 0.5, 'Joyce (finish 4.30)'],
 		['Aditya', 'Inbound/SF', 'Mon 5th May', 5, 6, 1, 'Aditya'],
 		['Alex', 'Inbound/SF', 'Mon 5th May', 6, 7, 1, 'Alex'],
 		['Akansha', 'Inbound/SF', 'Mon 5th May', 9, 10, 1, 'Akansha'],
@@ -194,22 +221,22 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 		['Grace', 'Inbound/SF', 'Mon 5th May', 3, 4, 1, 'Grace'],
 		['Aditya', 'Inbound/SF', 'Mon 5th May', 4, 5, 1, 'Aditya'],
 		['Shreya', 'Inbound/SF', 'Mon 5th May', 11, 12, 1, 'Shreya'],
-		['Grace', 'Inbound/SF', 'Mon 5th May', 12, 1, 1, 'Grace (start 12.30)'],
+		['Grace', 'Inbound/SF', 'Mon 5th May', 12.5, 1, 0.5, 'Grace (start 12.30)'],
 		['Alex', 'Inbound/SF', 'Mon 5th May', 4, 5, 1, 'Alex'],
 		['Angeline', 'Salesforce only', 'Mon 5th May', 9, 10, 1, 'Angeline'],
 		['Shreya', 'Salesforce only', 'Mon 5th May', 10, 11, 1, 'Shreya'],
 		['Akansha', 'Salesforce only', 'Mon 5th May', 12, 1, 1, 'Akansha'],
 		['Joyce', 'Salesforce only', 'Mon 5th May', 1, 2, 1, 'Joyce'],
 		['Grace', 'Salesforce only', 'Mon 5th May', 2, 3, 1, 'Grace'],
-		['Grace', 'Salesforce only', 'Mon 5th May', 4, 5, 1, 'Grace (finish 4.30)'],
+		['Grace', 'Salesforce only', 'Mon 5th May', 4, 4.5, 0.5, 'Grace (finish 4.30)'],
 		['Alex', 'Salesforce only', 'Mon 5th May', 5, 6, 1, 'Alex'],
 		['Aditya', 'Salesforce only', 'Mon 5th May', 6, 7, 1, 'Aditya'],
-		['Joyce', 'Salesforce only', 'Mon 5th May', 12, 1, 1, 'Joyce (start 12.30)'],
-		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 12, 1, 1, 'Yoon (start 12.30)'],
+		['Joyce', 'Salesforce only', 'Mon 5th May', 12.5, 1, 0.5, 'Joyce (start 12.30)'],
+		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 12.5, 1, 0.5, 'Yoon (start 12.30)'],
 		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 1, 2, 1, 'Yoon'],
 		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 2, 3, 1, 'Yoon'],
 		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 3, 4, 1, 'Yoon'],
-		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 4, 5, 1, 'Yoon (finish 4.30)'],
+		['Yoon', 'Outbound / Inbound', 'Mon 5th May', 4, 4.5, 0.5, 'Yoon (finish 4.30)'],
 		['Sienna', 'Outbound / Inbound', 'Mon 5th May', 5, 6, 1, 'Sienna'],
 		['Sienna', 'Outbound / Inbound', 'Mon 5th May', 6, 7, 1, 'Sienna'],
 		['Sienna', 'Outbound / Inbound', 'Mon 5th May', 4, 5, 1, 'Sienna']
@@ -219,22 +246,5 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 
 	test('Roster data should be extracted to the roster table', () => {
 		expect(result).toEqual(expectedResult);
-	});
-});
-
-describe('getTimeRange() will get the time range associated with the column of the cell.', () => {
-	const HEADER = {
-		"values" : [
-			['Mon 5th May', '9-10am', '10-11am', '11-12pm', '12-1pm', '1-2pm', '2-3pm', '3-4pm', '4-5pm', '5-6pm', '6-7pm']
-		],
-	};
-
-	const columnIndex = 3;
-	const expectedResult = '11-12';
-
-	const result = FRDET.getTimeRange(columnIndex, HEADER);
-
-	test('timeRange returned should be "11-12"', () => {
-		expect(result).toBe(expectedResult);
 	});
 });
