@@ -1,12 +1,66 @@
 const FRDET = require('./frdet');
 
 describe('extractName() takes a string value from the roster cell and returns the name', () => {
-	const nameString = "John Doe ()";
+	describe('Function will return the name from the string when there are no parenthesis', () => {
+		let nameString = "Jane Doe";
+		let expectedResult = 'Jane Doe';
 
-	const extractedName = FRDET.extractName(nameString);
+		let result = FRDET.extractName(nameString);
+
+		test('Name extracted from "Jane Doe" should be "Jane Doe"', () => {
+			expect(result).toBe(expectedResult);
+		});
+	});
 	
-	test('Name extracted should be "John Doe"', () => {
-		expect(extractedName).toBe('John Doe');
+	describe('Function will return the name from the string when there is nothing within the proceeding parenthesis', () => {
+	let nameString = "John Doe ()";
+		let expectedResult = 'John Doe';
+
+		let result = FRDET.extractName(nameString);
+		
+		test('Name extracted from "John Doe ()" should be "John Doe"', () => {
+			expect(result).toBe(expectedResult);
+		});
+	});
+
+	describe('Function will return the name from the string when there is something within the proceeding parenthesis', () => {
+		let nameString = "Jeremy Doe (do something)";
+		let expectedResult = 'Jeremy Doe';
+
+		let result = FRDET.extractName(nameString);
+
+		test('Name extracted from "Jeremy (do something)" should be "Jeremy Doe"', () => {
+			expect(result).toBe(expectedResult);
+		});
+
+		nameString = "Richard Hammond (from 9.30)";
+		expectedResult = 'Richard Hammond';
+
+		result = FRDET.extractName(nameString);
+
+		test('Name extracted from "Richard Hammond (from 9.30)" should be "Richard Hammond"', () => {
+			expect(result).toBe(expectedResult);
+		});
+	});
+
+	describe('Function will return an empty string when parenthesis preceeds the name', () => {
+		let nameString = "() James Doe";
+		let expectedResult = '';
+
+		let result = FRDET.extractName(nameString);
+
+		test('Name extracted from "() James Doe" should be an empty string', () => {
+			expect(result).toBe(expectedResult);
+		});
+
+		nameString = "(from 9.30) James Doe";
+		expectedResult = '';
+
+		result = FRDET.extractName(nameString);
+
+		test('Name extracted from "(from 9.30) James Doe" should be an empty string', () => {
+			expect(result).toBe(expectedResult);
+		});
 	});
 });
 
@@ -92,7 +146,7 @@ describe('excelDateToJSDate() convert excel date serial to JS Date format', () =
 	});
 });
 
-describe.only('extractLunchTime() gets the lunch time from the given string', () => {
+describe('extractLunchTime() gets the lunch time from the given string', () => {
 	let cellValue = 'John Doe (lunch 12.30)';
 	let expectedValue = 'lunch 12.30';
 
@@ -129,7 +183,7 @@ describe('getTimeRange() will get the time range associated with the column of t
 	});
 });
 
-describe.only('extractRosterData() extracts the roster data into an array.', () => {
+describe('extractRosterData() extracts the roster data into an array.', () => {
 	const ROSTERTABLE = {
 		"name" : "Monday1",
 		"columns" : {
