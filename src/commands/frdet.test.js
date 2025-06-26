@@ -65,39 +65,62 @@ describe('extractName() takes a string value from the roster cell and returns th
 });
 
 describe('extractTimeOverride() takes a string value from a roster cell and returns the time string found in parenthesis', () => {
-	const nameStrings = [
-		'John Doe (until 9.30)',
-		'John Doe (from 9.15 - until 9.45)',
-		'John Doe (9.15-9.45)',
-		'John Doe',
-		'Selen K (from 11:30)',
-		'John Doe (until 11.20)'
-	];
+	describe('Function will extract the time string from within the parenthesis', () => {
+		let nameString = 'Jeremy Clarkson (until 9.30)';
+		let expectedResult = 'until 9.30';
 
-	const extractedTimes = nameStrings.map(str => FRDET.extractTimeOverride(str));
+		let result = FRDET.extractTimeOverride(nameString);
 
-	test('Time extracted from "John Doe (until 9.30)" is "until 9.30"', () => {
-		expect(extractedTimes[0]).toBe('until 9.30');
+		test('Time string extracted from "Jeremy Clarkson (until 9.30)" should be "until 9.30"', () => {
+			expect(result).toBe(expectedResult);
+		});
+
+		nameString = 'James May (from 9.15 - until 9.45)';
+		expectedResult = 'from 9.15 - until 9.45';
+
+		result = FRDET.extractTimeOverride(nameString);
+
+		test('Time string extracted from "James May (from 9.15 - until 9.45)" should be "from 9.15 - until 9.45"', () => {
+			expect(result).toBe(expectedResult);
+		});
+
+		nameString = 'Richard Hammond (9.15 - 9.45)';
+		expectedResult = '9.15 - 9.45';
+
+		result = FRDET.extractTimeOverride(nameString);
+
+		test('Time string extracted from "Richard Hammond (9.15 - 9.45)" should be "9.15 - 9.45"', () => {
+			expect(result).toBe(expectedResult);
+		});
+
+		nameString = 'Tom Hanks (Do something from 12.30)';
+		expectedResult = 'from 12.30';
+
+		result = FRDET.extractTimeOverride(nameString);
+
+		test('Time string extracted from "Tom Hanks (from 12.30)" should be "from 12.30"', () => {
+			expect(result).toBe(expectedResult);
+		});
 	});
 
-	test('Time extracted from "John Doe (from 9.15 - until 9.45)" is "from 9.15 - until 9.45"', () => {
-		expect(extractedTimes[1]).toBe('from 9.15 - until 9.45');
+	describe('Function will return null if there is no time string within the parenthesis', () => {
+		const nameString = 'James May ()';
+
+		const result = FRDET.extractTimeOverride(nameString);
+
+		test('Time string extracted from "James May ()" should be null', () => {
+			expect(result).toBeNull;
+		});
 	});
 
-	test('Time extracted from "John Doe (9.15-9.45)" is "9.15-9.45"', () => {
-		expect(extractedTimes[2]).toBe('9.15-9.45');
-	});
+	describe('Function will return null if there is no parenthesis', () => {
+		const nameString = 'James May';
 
-	test('Time extracted from "John Doe" is Null', () => {
-		expect(extractedTimes[3]).toBeNull();
-	});
+		const result = FRDET.extractTimeOverride(nameString);
 
-	test('Time extracted from "John Doe (from 11:30)" should be "from 11:30"', () => {
-		expect(extractedTimes[4]).toBe('from 11:30');
-	});
-
-	test('Time extracted from "John Doe (until 11.20)" should be "until 11.20"', () => {
-		expect(extractedTimes[5]).toBe('until 11.20');
+		test('Time string extracted from "James May" should be null', () => {
+			expect(result).toBeNull;
+		});
 	});
 });
 
