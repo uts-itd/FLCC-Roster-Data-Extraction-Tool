@@ -5,7 +5,7 @@
 function extractName(cellValue) {
 	const parenthesisIndex = cellValue.indexOf('(');
 
-	if (parenthesisIndex > 0)
+	if (parenthesisIndex > -1)
 		return cellValue.substring(0, parenthesisIndex - 1).trim();
 
 	return cellValue.trim();
