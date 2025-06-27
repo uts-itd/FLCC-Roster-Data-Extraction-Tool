@@ -124,13 +124,34 @@ describe('extractTimeOverride() takes a string value from a roster cell and retu
 	});
 });
 
-describe('convertTime() converts a time string to double', () => {
-	const timeString = '9.30';
+describe('convertTime() converts a time in string format to an equivalent number', () => {
+	describe('Function converts time in string format to a number', () => {
+		let timeString = '9.30';
+		let expectedResult = 9.5;
 
-	const timeDbl = FRDET.convertTime(timeString);
+		let result = FRDET.convertTime(timeString);
 
-	test('Converts "9.30" to 9.5', () => {
-		expect(timeDbl).toBe(9.5);
+		test('time string "9.30" should convert to 9.5', () => {
+			expect(result).toBe(expectedResult);
+		});
+	});
+
+	describe('Returns null if string is not a time in string format', () => {
+		let timeString = 'Dimingo Chaves (from 9.30)';
+
+		let result = FRDET.convertTime(timeString);
+
+		test('String "Dimingo Chaves (from 9.30)" should return null', () => {
+			expect(result).toBeNull;
+		});
+
+		timeString = 'from 9.30';
+
+		result = FRDET.convertTime(timeString);
+
+		test('from 9.30" should return null', () => {
+			expect(result).toBeNull;
+		});
 	});
 });
 
