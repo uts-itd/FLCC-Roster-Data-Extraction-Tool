@@ -167,22 +167,26 @@ describe('excelDateToJSDate() convert excel date serial to JS Date format', () =
 });
 
 describe('extractLunchTime() gets the lunch time from the given string', () => {
-	let cellValue = 'John Doe (lunch 12.30)';
-	let expectedValue = 'lunch 12.30';
+	describe('extract lunch time when it is explicitly declared in parenthesis', () => {
+		let cellValue = 'John Doe (lunch 12.30)';
+		let expectedValue = 'lunch 12.30';
 
-	let result = FRDET.extractLunchTime(cellValue);
+		let result = FRDET.extractLunchTime(cellValue);
 
-	test('result should be "lunch 12.30"', () => {
-		expect(result).toBe(expectedValue);
+		test('John Doe (lunch 12.30) should be "lunch 12.30"', () => {
+			expect(result).toBe(expectedValue);
+		});
 	});
 
-	cellValue = 'John Doe (Do something lunch 12.00)';
-	expectedValue = 'lunch 12.00';
+	describe('extracts lunch time when it is declared in parenthesis with other text', () => {
+		let cellValue = 'John Doe (Do something lunch 12.00)';
+		let expectedValue = 'lunch 12.00';
 
-	result = FRDET.extractLunchTime(cellValue);
+		let result = FRDET.extractLunchTime(cellValue);
 
-	test('result should be "lunch 12.00"', () => {
-		expect(result).toBe(expectedValue);
+		test('John Doe (Do something lunch 12.00) should be "lunch 12.00"', () => {
+			expect(result).toBe(expectedValue);
+		});
 	});
 });
 
