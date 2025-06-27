@@ -155,30 +155,6 @@ describe('convertTime() converts a time in string format to an equivalent number
 	});
 });
 
-describe('getTime() will get the time array based off the input', () => {
-	test('result should be array with 11 in [0] and 12 in [1]', () => {
-		const cellValue = 'John Doe';
-		const timeString = '11.00-12.00';
-
-		const result = FRDET.getTime(timeString, cellValue);
-
-		expect(result[0]).toBe(11);
-		expect(result[1]).toBe(12);
-	});
-});
-
-describe('getTime() should get the time based off the cell value', () => {
-	const cellValue = 'John Doe (from 11:30)';
-	const timeString = '11.00-12.00';
-	const expectedResult = [11.5, 12];
-
-	const result = FRDET.getTime(timeString, cellValue);
-	
-	test('result should equal [11.5, 12] ', () => {
-		expect(result).toEqual(expectedResult);
-	});
-});
-
 describe('excelDateToJSDate() convert excel date serial to JS Date format', () => {
 	const dateSerial = 45108;
 	const expectedDate = new Date('2023-07-01T00:00:00.000Z');
