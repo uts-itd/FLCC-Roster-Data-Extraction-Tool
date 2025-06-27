@@ -80,40 +80,6 @@ function cleanTimeStringOverride(timeStringOverride) {
 	return cleanedString;
 }
 
-// Gets the start and end time from the timeString or cellValue if time is present
-function getTime(timeString, cellValue) {
-	const timeStringArr = timeString.split('-');
-
-	// Set start and end time based of column header (timeString)
-	let startTime = timeStringArr[0].trim();
-	let endTime = timeStringArr[1].trim();
-
-	// Checks if there are any time override values in the cells (e.g. John Doe (from 9.30)
-	let timeStringOverride = extractTimeOverride(cellValue);
-	
-	
-	if (timeStringOverride !== null) {
-		const STARTSEMIPHORE = 'from';
-		const ENDSEMIPHORE = 'til';
-
-		// clean the timeStringOverride (so it's consistent - e.g. hhmm delimiter to .)
-		timeStringOverride = cleanTimeStringOverride(timeStringOverride);
-
-		const timeStringOverrideArr = timeStringOverride.split('-');
-
-		// [from 9.30, til 3.30], [from 9.30], [til 3.30]
-		timeStringOverrideArr.forEach(time => {
-			if (time.includes(STARTSEMIPHORE))
-				startTime = convertTime(time.replace(STARTSEMIPHORE, '').trim());
-
-			if (time.includes(ENDSEMIPHORE))
-				endTime = convertTime(time.replace(ENDSEMIPHORE, '').trim());
-		});
-	}
-
-	return [+startTime, +endTime];	
-}
-
 /*
  * Returns the lunch time from the string otherwise, it return null.
  */
@@ -241,7 +207,6 @@ module.exports = {
 	getTimeString,
 	excelDateToJSDate,
 	cleanTimeStringOverride,
-	getTime,
 	extractLunchTime,
 	getTimeRange,
 	extractRosterData
