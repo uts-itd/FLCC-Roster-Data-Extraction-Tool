@@ -190,21 +190,35 @@ describe('extractLunchTime() gets the lunch time from the given string', () => {
 	});
 });
 
-describe('getTimeRange() will get the time range associated with the column of the cell.', () => {
+describe('getTimeRange() will return an array with the start and end time of the range associated with the column of the cell.', () => {
 	const HEADER = {
 		"values" : [
 			['Mon 5th May', '9-10am', '10-11am', '11-12pm', '12-1pm', '1-2pm', '2-3pm', '3-4pm', '4-5pm', '5-6pm', '6-7pm']
 		],
 	};
 
-	const columnIndex = 3;
-	const expectedResult = '11-12';
+	describe('Function will return an array of size 2, with the start time and the end times', () => {
+		const columnIndex = 3;
+		const expectedResult = [11,12];
 
-	const result = FRDET.getTimeRange(columnIndex, HEADER);
+		const result = FRDET.getTimeRange(columnIndex, HEADER);
 
-	test('timeRange returned should be "11-12"', () => {
-		expect(result).toBe(expectedResult);
+		test('timeRange returned should be [11,12]', () => {
+			expect(result).toEqual(expectedResult);
+		});
 	});
+
+	describe('Function will return null if 0 is passed as the column parameter', () => {
+		const columnIndex = 0;
+		const expectedResult = null;
+
+		const result = FRDET.getTimeRange(columnIndex, HEADER);
+
+		test('timeRange returned should be null', () => {
+			expect(result).toBeNull();
+		});
+	});
+
 });
 
 describe('extractRosterData() extracts the roster data into an array.', () => {
