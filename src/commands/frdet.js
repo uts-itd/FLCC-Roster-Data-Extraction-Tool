@@ -122,7 +122,7 @@ function extractRosterData(table, headerRowRange) {
 			if (cellValue !== '') {
 				let name = extractName(cellValue);
 
-				let timeRange = getTimeRange(colIndex, headerRowRange).split('-'); // e.g. 11-12
+				let timeRange = getTimeRange(colIndex, headerRowRange); // e.g. [11-12]
 				let timeRangeOverride = extractTimeOverride(cellValue); // e.g. from 11.30 or until 4.30
 				let lunchTimeString = extractLunchTime(cellValue); // e.g. lunch 12.30
 				
