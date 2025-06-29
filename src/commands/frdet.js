@@ -39,26 +39,6 @@ function convertTime(timeString) {
 }
 
 /*
- * Returns a time range string corresponding to the cell column index
- */
-function getTimeString(columnIndex) {
-	const timeStrings = new Map([
-		[1, "9.00-10.00"],
-		[2, "10.00-11.00"],
-		[3, "11.00-12.00"],
-		[4, "12.00-1.00"],
-		[5, "1.00-2.00"],
-		[6, "2.00-3.00"],
-		[7, "3.00-4.00"],
-		[8, "4.00-5.00"],
-		[9, "5.00-6.00"],
-		[10, "6.00-7.00"]
-	]);
-
-	return timeStrings.get(columnIndex);
-}
-
-/*
  * Returns a date object converted from the Excel date serial number
  */
 function excelDateToJSDate(serial) {
@@ -211,7 +191,6 @@ module.exports = {
 	extractName,
 	extractTimeOverride,
 	convertTime,
-	getTimeString,
 	excelDateToJSDate,
 	cleanTimeStringOverride,
 	extractLunchTime,
