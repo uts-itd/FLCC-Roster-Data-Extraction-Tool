@@ -218,7 +218,6 @@ describe('getTimeRange() will return an array with the start and end time of the
 			expect(result).toBeNull();
 		});
 	});
-
 });
 
 describe('extractRosterData() extracts the roster data into an array.', () => {
