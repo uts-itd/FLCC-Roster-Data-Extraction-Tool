@@ -100,7 +100,14 @@ function getTimeRange(columnIndex, headerRowRange) {
 
 	const matches = timeRangeString.match(pattern);
 
-	return matches[0];
+	try {
+		let timeRangeStrArray = matches[0].split('-');
+
+		return timeRangeStrArray.map(timeStr => Number(timeStr));
+	} catch (error) {
+
+		return null;
+	}
 }
 
 /*
