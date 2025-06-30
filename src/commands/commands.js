@@ -40,6 +40,9 @@ async function extractData(event) {
 		await context.sync();
 
 		// define table names
+<<<<<<< HEAD
+=======
+>>>>>>> cc7796d647b3ca476ee050183b530d00cf324f84
 		const tableNames = [];
 		
 		tables.items.forEach(table => {
