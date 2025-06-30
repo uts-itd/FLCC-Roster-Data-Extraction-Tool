@@ -40,13 +40,17 @@ async function extractData(event) {
 		await context.sync();
 
 		// define table names
-		const tableNames =
-			['Monday1', 'Tuesday1', 'Wednesday1', 'Thursday1', 'Friday1', 
-				'Monday2', 'Tuesday2', 'Wednesday2', 'Thursday2', 'Friday2',
-				'Monday3', 'Tuesday3', 'Wednesday3', 'Thursday3', 'Friday3',
-				'Monday4', 'Tuesday4', 'Wednesday4', 'Thursday4', 'Friday4',
-				'Monday5', 'Tuesday5', 'Wednesday5', 'Thursday5', 'Friday5'
-			];
+
+		const tableNames = [];
+		
+		tables.items.forEach(table => {
+			const pattern = /(Monday|Tuesday|Wednesday|Thursday|Friday)\d{1}/g
+			
+			let matches = table.name.match(pattern);
+			
+			if(matches)
+				tableNames.push(matches[0]);
+		});
 
 		// TODO: Check that it is a roster file	
 
