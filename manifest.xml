@@ -8,7 +8,7 @@
   <Description DefaultValue="A tool to ecxtract roster data into a table."/>
   <IconUrl DefaultValue="https://localhost:3000/assets/UTS_logo_web-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/UTS_logo_web-64.png"/>
-  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+  <SupportUrl DefaultValue="https://github.com/uts-itd/FLCC-Roster-Data-Extraction-Tool/wiki"/>
   <AppDomains>
 	  <AppDomain>https://uts-itd.github.io</AppDomain>
   </AppDomains>
