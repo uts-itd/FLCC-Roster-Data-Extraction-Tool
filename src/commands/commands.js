@@ -51,34 +51,35 @@ async function extractData(event) {
 				tableNames.push(matches[0]);
 		});
 
-		// TODO: Check that it is a roster file	
+		// Only work if there are roster tables
+		if (tableNames.length > 0) {
+			// create Roster Data Sheet if it does not exist
+			createRosterDataSheet(sheets).activate();
 
-		// create Roster Data Sheet if it does not exist
-		createRosterDataSheet(sheets).activate();
+			// create rosterData table if it does not exist
+			const rosterDataTable = createRosterDataTable(tables);
 
-		// create rosterData table if it does not exist
-		const rosterDataTable = createRosterDataTable(tables);
+			// define empty roster data
+			let rosterData = [];
 
-		// define empty roster data
-		let rosterData = [];
+			tableNames.forEach(tableName => {
+				try {
+					let rosterTable = tables.items.find(item => item.name === tableName);
+					let header = headerRowRanges.find(header => header.tableName === tableName);
+					let extractedRosterData = FRDET.extractRosterData(rosterTable, header.headerRowRange);
 
-		tableNames.forEach(tableName => {
-			try {
-				let rosterTable = tables.items.find(item => item.name === tableName);
-				let header = headerRowRanges.find(header => header.tableName === tableName);
-				let extractedRosterData = FRDET.extractRosterData(rosterTable, header.headerRowRange);
+					rosterData = rosterData.concat(extractedRosterData);
+				} catch (error) {
+					console.log(`${tableName} not found`);
+				}
+			});
 
-				rosterData = rosterData.concat(extractedRosterData);
-			} catch (error) {
-				console.log(`${tableName} not found`);
-			}
-		});
+			rosterDataTable.rows.add(null, rosterData);
 
-		rosterDataTable.rows.add(null, rosterData);
-
-		// Format table
-		rosterDataTable.getRange().format.autofitColumns();
-		rosterDataTable.columns.getItem('Date').getDataBodyRange().numberFormat = 'dd/mm/yyyy';
+			// Format table
+			rosterDataTable.getRange().format.autofitColumns();
+			rosterDataTable.columns.getItem('Date').getDataBodyRange().numberFormat = 'dd/mm/yyyy';
+		}
 
 		event.completed();
 	});
