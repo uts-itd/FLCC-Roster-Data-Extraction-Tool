@@ -97,7 +97,7 @@ function extractRosterData(table, headerRowRange) {
 	const rows = table.rows.items;
 	const rosterData = [];
 
-	let date = headerRowRange.values[0][0];
+	let date = new Date(Date.parse(headerRowRange.values[0][0])).toLocaleDateString('en-AU');
 
 	rows.forEach(row => {
 		let servicePoint = row.values[0][0];
