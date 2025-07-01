@@ -78,7 +78,6 @@ async function extractData(event) {
 
 			// Format table
 			rosterDataTable.getRange().format.autofitColumns();
-			rosterDataTable.columns.getItem('Date').getDataBodyRange().numberFormat = 'dd/mm/yyyy';
 		}
 
 		event.completed();
