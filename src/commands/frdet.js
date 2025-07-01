@@ -119,8 +119,8 @@ function extractRosterData(table, headerRowRange) {
 				if (lunchTimeString) {
 					// Get lunch start and end times
 					let lunchStart = convertTime(lunchTimeString.match(timePattern)[0]);
-					let lunchEnd = lunchStart + .5 > 12 ?
-						lunchStart + .5 - 12 :
+					let lunchEnd = lunchStart + .5 >= 13 ?
+						lunchStart + .5 - 12:
 						lunchStart + .5;
 
 					// Calculate how long lunch time is
@@ -139,7 +139,7 @@ function extractRosterData(table, headerRowRange) {
 					// Caculate how long service point time is
 					let time = endTime > startTime ?
 						endTime - startTime:
-						entTime + 12 - startTime;
+						endTime + 12 - startTime;
 
 					// If lunch time starts BEFORE the service point start
 					if (lunchStart < startTime) {
