@@ -235,7 +235,7 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 				},
 				{
 					"values" : [
-						['Inbound/SF', 'Akansha', 'Akansha', 'Akansha', 'Shreya', '', 'Joyce', 'Grace', 'Aditya', '', '']
+						['Inbound/SF', 'Akansha', 'Akansha', 'Akansha', 'Shreya (lunch 12.00)', '', 'Joyce', 'Grace', 'Aditya', '', '']
 					],
 				},
 				{
@@ -307,7 +307,8 @@ describe('extractRosterData() extracts the roster data into an array.', () => {
 		['Akansha', 'Inbound/SF', '05/05/2025', 9, 10, 1, 'Akansha'],
 		['Akansha', 'Inbound/SF', '05/05/2025', 10, 11, 1, 'Akansha'],
 		['Akansha', 'Inbound/SF', '05/05/2025', 11, 12, 1, 'Akansha'],
-		['Shreya', 'Inbound/SF', '05/05/2025', 12, 1, 1, 'Shreya'],
+		['Shreya', 'Lunch', '05/05/2025', 12, 12.5, 0.5, 'Shreya (lunch 12.00)'],
+		['Shreya', 'Inbound/SF', '05/05/2025', 12.5, 1, 0.5, 'Shreya (lunch 12.00)'],
 		['Joyce', 'Inbound/SF', '05/05/2025', 2, 3, 1, 'Joyce'],
 		['Grace', 'Inbound/SF', '05/05/2025', 3, 4, 1, 'Grace'],
 		['Aditya', 'Inbound/SF', '05/05/2025', 4, 5, 1, 'Aditya'],
